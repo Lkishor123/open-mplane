@@ -47,7 +47,7 @@ SysrepoGetitemsCallback::oper_get_items(
     const char* path,
     const char* request_xpath,
     uint32_t request_id,
-    libyang::S_Data_Node& parent,
+    libyang::DataNode& parent,
     void* private_data) {
   sr_error_t srError = SR_ERR_OK;
 
@@ -55,10 +55,10 @@ SysrepoGetitemsCallback::oper_get_items(
   // mParentPath.c_str() << "\" DATA ==========\n" << std::endl;
 
   try {
-    libyang::S_Context ctx = session->get_context();
-    libyang::S_Module mod = ctx->get_module(module_name);
+    libyang::Context ctx = session->get_context();
+    libyang::Module mod = ctx.get_module(module_name);
 
-    parent.reset(new libyang::Data_Node(
+    parent.reset(new libyang::DataNode(
         ctx, mParentPath.c_str(), nullptr, LYD_ANYDATA_CONSTSTRING, 0));
     processElements(ctx, parent, mod, this);
   } catch (std::exception& exception) {
@@ -86,9 +86,9 @@ SysrepoGetitemsCallback::oper_get_items(
 //-------------------------------------------------------------------------------------------------------------
 void
 SysrepoGetitemsCallback::processElements(
-    libyang::S_Context ctx,
-    libyang::S_Data_Node parent,
-    libyang::S_Module mod,
+    libyang::Context ctx,
+    libyang::DataNode parent,
+    libyang::Module mod,
     const ILeafContainer* elementContainer,
     unsigned level) {
   DISP_ELES(std::string levelStr(level, '+'));
@@ -96,12 +96,12 @@ SysrepoGetitemsCallback::processElements(
   for (auto element : elementContainer->contents()) {
     try {
       std::string name(element->name());
-      libyang::S_Module module(mod);
+      libyang::Module module(mod);
       std::string moduleName(nodeModule(name));
       if (!moduleName.empty()) {
         // Augmented element, so switch to that module
         name = nodeName(name);
-        module = ctx->get_module(moduleName.c_str());
+        module = ctx.get_module(moduleName.c_str());
       }
 
       if (element->isContainer()) {
@@ -110,8 +110,8 @@ SysrepoGetitemsCallback::processElements(
                       << std::endl);
 
         // container - container, list or choice
-        libyang::S_Data_Node container(
-            new libyang::Data_Node(parent, module, name.c_str()));
+        libyang::DataNode container(
+            new libyang::DataNode(parent, module, name.c_str()));
         processElements(ctx, container, module, element.get(), level + 1);
         DISP_ELES(std::cerr << "Process Eleents(ctor) done" << std::endl);
         continue;
@@ -121,7 +121,7 @@ SysrepoGetitemsCallback::processElements(
           std::cerr << levelStr << "leaf" << element->name() << " = "
                     << element->value() << std::endl);
       // leaf
-      libyang::S_Data_Node leaf(new libyang::Data_Node(
+      libyang::DataNode leaf(new libyang::DataNode(
           parent, module, name.c_str(), element->value().c_str()));
     } catch (std::exception& exception) {
       std::string exceptionStr = exception.what();

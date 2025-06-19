@@ -770,8 +770,8 @@ RadioDatastoreSysrepo::disableFeature(
 
 bool
 RadioDatastoreSysrepo::isModuleInstalled(const std::string& name) const {
-  libyang::S_Context lyContext(mSrConnection->get_context());
-  libyang::S_Module module(lyContext->get_module(name.c_str(), nullptr, 0));
+  libyang::Context lyContext(mSrConnection->get_context());
+  libyang::Module module(lyContext.get_module(name.c_str(), nullptr, 0));
   if (!module)
     return false;
 

@@ -4,9 +4,9 @@ SECTION = "core"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=08a5578c9bab06fb2ae84284630b973f"
 
-SRC_URI = "git://github.com/CESNET/libnetconf2.git;protocol=https"
+SRC_URI = "git://github.com/CESNET/libnetconf2.git;protocol=https;branch=v2"
 
-SRCREV = "aaaada2ae38bed7601d12965b1c9fd826f855bab"
+SRCREV = "${AUTOREV}"
 S = "${WORKDIR}/git"
 
 inherit cmake pkgconfig
