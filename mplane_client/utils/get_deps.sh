@@ -75,9 +75,9 @@ fi
 # Download all dependencies
 wget -O libssh-0.9.5.tar.gz https://git.libssh.org/projects/libssh.git/snapshot/libssh-0.9.5.tar.gz
 tar -xf libssh-0.9.5.tar.gz && rm libssh-0.9.5.tar.gz
-git clone --single-branch --branch v1.0.240 https://github.com/CESNET/libyang
-git clone --single-branch --branch v1.1.46 https://github.com/CESNET/libnetconf2
-git clone --single-branch --branch v1.4.140 https://github.com/sysrepo/sysrepo
+git clone --single-branch --branch v2.1.x https://github.com/CESNET/libyang
+git clone --single-branch --branch v2.1.x https://github.com/CESNET/libnetconf2
+git clone --single-branch --branch v2.1.x https://github.com/sysrepo/sysrepo
 git clone --single-branch --branch v1.1.76 https://github.com/CESNET/netopeer2
 git clone --single-branch --branch v1.38.0 https://github.com/grpc/grpc
 cd grpc

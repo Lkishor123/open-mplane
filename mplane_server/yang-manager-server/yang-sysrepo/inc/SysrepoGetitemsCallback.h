@@ -47,14 +47,14 @@ public:
      const char* path,
      const char* request_xpath,
      uint32_t request_id,
-     libyang::S_Data_Node& parent,
+    libyang::DataNode& parent,
      void* private_data) override;
 
 private:
  void processElements(
-     libyang::S_Context ctx,
-     libyang::S_Data_Node parent,
-     libyang::S_Module mod,
+    libyang::Context ctx,
+    libyang::DataNode parent,
+    libyang::Module mod,
      const ILeafContainer* element,
      unsigned level = 0);
 
