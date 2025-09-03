@@ -26,7 +26,7 @@ Scripts (tools/sim):
 Environment variables:
 - `SIM_SHIM_BIN` – shim binary path
 - `SIM_SERVER_BIN` – `mplane-server-app` binary (default `build/server-sim/mplane-server-app`)
-- `SIM_CLIENT_BIN` – `mplane_client` command (default `mplane_client/build/mpc_client`)
+- `SIM_CLIENT_BIN` – `mplane_client` command (default `build/client-sim/mpc_client`)
 - `SIM_SHIM_PID_FILE`, `SIM_SERVER_PID_FILE`, `SIM_CLIENT_PID_FILE` – PID file locations
 
 Build (example):
@@ -36,6 +36,9 @@ Build (example):
 - Build shim:
   - `cmake -S mplane_server/utils/test_shim -B mplane_server/utils/test_shim/build`
   - `cmake --build mplane_server/utils/test_shim/build -j`
+- Build client:
+  - `cmake -S mplane_client -B build/client-sim -DCMAKE_BUILD_TYPE=RelWithDebInfo`
+  - `cmake --build build/client-sim -j`
 - Start shim: `./tools/sim/sim_start.sh`
 
 Notes:
