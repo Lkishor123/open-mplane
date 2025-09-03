@@ -25,7 +25,7 @@ CALLHOME_PORT = int(os.getenv("MP_CALLHOME_PORT", "4334"))
 
 SIM_SHIM_BIN = Path(os.getenv("SIM_SHIM_BIN", "mplane_server/utils/test_shim/build/server-test-shim"))
 SIM_SERVER_BIN = Path(os.getenv("SIM_SERVER_BIN", "build/server-sim/mplane-server-app"))
-SIM_CLIENT_BIN = Path(os.getenv("SIM_CLIENT_BIN", "mplane_client/build/mpc_client"))
+SIM_CLIENT_BIN = Path(os.getenv("SIM_CLIENT_BIN", "build/client-sim/mpc_client"))
 
 
 def _spawn_with_log(cmd):

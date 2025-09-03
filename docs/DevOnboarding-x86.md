@@ -4,7 +4,7 @@ Prereqs (Ubuntu 22.04):
 - build-essential, cmake, socat
 - Optional: sysrepo/netopeer2, libyang, gRPC stack (for full server/client builds)
 
-Build HAL, shim, and server (with adapters):
+Build HAL, shim, server, and client (with adapters):
 - `./tools/sim/build_sim.sh`
 
 Run simulator:
