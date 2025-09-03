@@ -12,6 +12,9 @@ endif()
 
 include(GNUInstallDirs)
 
+# Simulator/test adapters
+option(HAL_TEST "Enable HAL test adapters (x86 simulator)" OFF)
+
 ## xcommon
 set(MPLANE_SERVER_SOURCES
   xcommon/Base64/src/Base64.cpp
@@ -296,6 +299,13 @@ find_library(YANG-CPP yang-cpp)
 find_package(ZLIB REQUIRED)
 
 add_executable(mplane-server-app ${MPLANE_SERVER_SOURCES})
+
+if (HAL_TEST)
+  target_compile_definitions(mplane-server-app PRIVATE HAL_TEST=1)
+  target_sources(mplane-server-app PRIVATE \
+    yang-manager-server/yang-model-handlers/src/OranFmHandler.cpp \
+    yang-manager-server/yang-model-handlers/src/OranSwmHandler.cpp)
+endif()
 
 target_link_libraries(mplane-server-app
   ${CRYPTO}

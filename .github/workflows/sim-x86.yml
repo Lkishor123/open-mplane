@@ -1,0 +1,60 @@
+name: sim-x86
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  sim:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential socat
+      - name: Build HAL (x86)
+        run: |
+          cmake -S libhalmplane -B build/hal-x86 -DCONTEXT=YOCTO -DBUILD_BOARD=x86 -DBUILD_BOARD_STYLE=MONO -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          cmake --build build/hal-x86 -j
+      - name: Build Shim
+        run: |
+          cmake -S mplane_server/utils/test_shim -B mplane_server/utils/test_shim/build
+          cmake --build mplane_server/utils/test_shim/build -j
+      - name: Build mplane_server (HAL_TEST)
+        run: |
+          cmake -S mplane_server -B build/server-sim -DHAL_TEST=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          cmake --build build/server-sim -j
+      - name: Build mplane_client
+        run: |
+          cmake -S mplane_client -B mplane_client/build
+          cmake --build mplane_client/build -j
+      - name: Start simulator stack
+        run: |
+          SOCK=/tmp/haltest.sock
+          [ -S "$SOCK" ] && rm -f "$SOCK"
+          mplane_server/utils/test_shim/build/server-test-shim >shim.log 2>&1 &
+          echo $! > /tmp/server-test-shim.pid
+          build/server-sim/mplane-server-app >server.log 2>&1 &
+          echo $! > /tmp/mplane-server-app.pid
+          mplane_client/build/mpc_client --insecure >client.log 2>&1 &
+          echo $! > /tmp/mplane-client.pid
+          sleep 5
+      - name: Run tests
+        run: pytest -q tests/sim
+      - name: Stop simulator stack
+        if: always()
+        run: |
+          ./tools/sim/sim_stop.sh || true
+      - name: Archive logs and PM files
+        if: always()
+        run: |
+          mkdir -p artifacts/logs artifacts/pm
+          cp shim.log server.log client.log artifacts/logs/ || true
+          find /tmp -name '*.csv' -exec cp {} artifacts/pm/ \; || true
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-artifacts
+          path: artifacts

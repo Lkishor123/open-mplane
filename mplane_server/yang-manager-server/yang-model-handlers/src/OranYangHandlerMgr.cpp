@@ -24,6 +24,10 @@
 #include "OranProcessingElementHandler.h"
 #include "OranUplaneConfHandler.h"
 #include "OranUserMgmtHandler.h"
+#ifdef HAL_TEST
+#include "OranFmHandler.h"
+#include "OranSwmHandler.h"
+#endif
 
 using namespace Mplane;
 
@@ -61,6 +65,10 @@ OranYangHandlerMgr::OranYangHandlerMgr(
   registerHandler(std::make_shared<OranProcessingElementHandler>(moduleMgr));
   registerHandler(std::make_shared<OranUplaneConfHandler>(moduleMgr));
   registerHandler(std::make_shared<OranUserMgmtHandler>(moduleMgr));
+  #ifdef HAL_TEST
+  registerHandler(std::make_shared<OranFmHandler>(moduleMgr));
+  registerHandler(std::make_shared<OranSwmHandler>(moduleMgr));
+  #endif
 }
 
 //-------------------------------------------------------------------------------------------------------------
