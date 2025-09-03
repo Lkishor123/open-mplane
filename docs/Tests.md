@@ -4,7 +4,7 @@ Scope:
 - End-to-end tests will drive the stack via `mplane_client` gRPC and NETCONF RPCs. This repo now includes the simulator shim and mock HAL to make x86 testing feasible without hardware.
 
 Quickstart:
-- Build HAL, shim, and server with adapters: `./tools/sim/build_sim.sh`
+- Build HAL, shim, server, and client with adapters: `./tools/sim/build_sim.sh`
 - Start shim: `./tools/sim/sim_start.sh`
 - Start server (separate terminal): `build/server-sim/mplane-server-app --cfg-data-path <...> --netopeer-path <...> --yang-mods-path <...>`
 - Inject scenarios using helper scripts:

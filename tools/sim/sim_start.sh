@@ -20,7 +20,7 @@ echo $! > "${SIM_SERVER_PID_FILE:-/tmp/mplane-server-app.pid}"
 echo "Server PID $(cat ${SIM_SERVER_PID_FILE:-/tmp/mplane-server-app.pid})"
 
 echo "Starting mplane_client gRPC listener..."
-eval "${SIM_CLIENT_BIN:-mplane_client/build/mpc_client} &"
+eval "${SIM_CLIENT_BIN:-build/client-sim/mpc_client} &"
 echo $! > "${SIM_CLIENT_PID_FILE:-/tmp/mplane-client.pid}"
 echo "Client PID $(cat ${SIM_CLIENT_PID_FILE:-/tmp/mplane-client.pid})"
 
