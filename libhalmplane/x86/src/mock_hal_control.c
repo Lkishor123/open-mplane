@@ -136,7 +136,8 @@ void mock_hal_set_sw_result_ext(
   emit_sw_event(phase, result);
 }
 
-int mock_hal_trigger_pm(const char* object_name, const char* out_dir) {
+int mock_hal_trigger_pm(
+    const char* object_name, const char* out_dir, const char* remote_dir) {
   // Minimal stub: create a CSV file with a timestamped name
   if (!object_name || !out_dir) return 1;
   char path[512];
@@ -150,6 +151,26 @@ int mock_hal_trigger_pm(const char* object_name, const char* out_dir) {
     fprintf(f, "%ld,%d\n", (long)now + i, 42 + i);
   }
   fclose(f);
+
+  if (remote_dir && remote_dir[0]) {
+    const char* fname = strrchr(path, '/');
+    fname = fname ? fname + 1 : path;
+    char rpath[512];
+    snprintf(rpath, sizeof(rpath), "%s/%s", remote_dir, fname);
+    FILE* src = fopen(path, "rb");
+    if (src) {
+      FILE* dst = fopen(rpath, "wb");
+      if (dst) {
+        char buf[4096];
+        size_t n;
+        while ((n = fread(buf, 1, sizeof(buf), src)) > 0) {
+          fwrite(buf, 1, n, dst);
+        }
+        fclose(dst);
+      }
+      fclose(src);
+    }
+  }
   return 0;
 }
 

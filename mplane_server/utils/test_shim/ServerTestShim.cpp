@@ -96,7 +96,10 @@ static int handle_line(int cfd, const std::string& line) {
   }
 
   if (cmd == "pm") {
-    int rc = mock_hal_trigger_pm(kv["object"].c_str(), kv["out"].c_str());
+    const char* remote = kv.count("remote") ? kv["remote"].c_str() : nullptr;
+    int rc = mock_hal_trigger_pm(kv["object"].c_str(),
+                                 kv["out"].c_str(),
+                                 remote);
     dprintf(cfd, rc == 0 ? "OK\n" : "ERR:pm\n");
     return 0;
   }

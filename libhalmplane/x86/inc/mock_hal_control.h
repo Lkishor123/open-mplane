@@ -45,8 +45,11 @@ void mock_hal_set_sw_result(const char* phase, const char* result);
 void mock_hal_set_sw_result_ext(
     const char* phase, const char* result, const char* slot, const char* file);
 
-// Trigger PM generation stub; writes CSVs under out_dir (simulates SFTP upload)
-int mock_hal_trigger_pm(const char* object_name, const char* out_dir);
+// Trigger PM generation stub; writes CSVs under out_dir and optionally copies
+// them to remote_dir to emulate an upload to a remote server
+int mock_hal_trigger_pm(const char* object_name,
+                        const char* out_dir,
+                        const char* remote_dir);
 
 // Provide a simple JSON status snapshot for observability
 int mock_hal_status(char* buf, size_t buflen);
