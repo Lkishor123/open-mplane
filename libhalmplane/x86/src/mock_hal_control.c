@@ -214,6 +214,12 @@ int halmplane_tx_carrier_state_change(
     // Enforce sync precondition
     return 1;
   }
+  fprintf(stderr,
+          "tx_carrier_state_change name=%s state=%s do_apply=%d\n",
+          name,
+          new_state,
+          do_apply);
+  fflush(stderr);
   if (!do_apply) return 0;
 
   carrier_entry_t* e = find_entry(g_tx_carriers, name);
