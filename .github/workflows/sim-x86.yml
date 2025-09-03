@@ -1,0 +1,40 @@
+name: sim-x86
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  sim:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential socat
+      - name: Build HAL (x86)
+        run: |
+          cmake -S libhalmplane -B build/hal-x86 -DCONTEXT=YOCTO -DBUILD_BOARD=x86 -DBUILD_BOARD_STYLE=MONO -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          cmake --build build/hal-x86 -j
+      - name: Build Shim
+        run: |
+          cmake -S mplane_server/utils/test_shim -B mplane_server/utils/test_shim/build
+          cmake --build mplane_server/utils/test_shim/build -j
+      - name: Build mplane_server (HAL_TEST)
+        run: |
+          cmake -S mplane_server -B build/server-sim -DHAL_TEST=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          cmake --build build/server-sim -j
+      - name: Start Shim
+        run: |
+          chmod +x tools/sim/*.sh
+          SIM_SHIM_BIN=mplane_server/utils/test_shim/build/server-test-shim ./tools/sim/sim_start.sh
+      - name: Sanity ping
+        run: |
+          printf 'status\n' | socat - UNIX-CONNECT:/tmp/haltest.sock
+          printf 'sync state=LOCKED\n' | socat - UNIX-CONNECT:/tmp/haltest.sock
+          printf 'uplane dir=tx name=c1 state=ACTIVE\n' | socat - UNIX-CONNECT:/tmp/haltest.sock || true
+      - name: Stop Shim
+        if: always()
+        run: |
+          ./tools/sim/sim_stop.sh || true
