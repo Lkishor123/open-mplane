@@ -9,7 +9,7 @@ Quickstart:
 - Start server (separate terminal): `build/server-sim/mplane-server-app --cfg-data-path <...> --netopeer-path <...> --yang-mods-path <...>`
 - Inject scenarios using helper scripts:
   - `./tools/sim/set_sync.sh LOCKED`
-  - `./tools/sim/uplane_tx_ready.sh <carrier>` (or use `uplane` command via `socat`)
+  - `./tools/sim/uplane_tx_ready.sh <carrier>`
   - `./tools/sim/inject_alarm.sh 1001 Major false "RF path warning"`
   - `./tools/sim/trigger_pm.sh RX_POWER /tmp`
 
