@@ -20,8 +20,14 @@ Files:
 - `mplane_server/utils/test_shim/ServerTestShim.cpp`: UNIX socket daemon
 
 Scripts (tools/sim):
-- `sim_start.sh`, `sim_stop.sh` – start/stop shim
+- `sim_start.sh`, `sim_stop.sh` – start/stop shim, `mplane-server-app`, and `mplane_client`
 - `inject_alarm.sh`, `set_sync.sh`, `force_sw_result.sh`, `trigger_pm.sh` – helpers
+
+Environment variables:
+- `SIM_SHIM_BIN` – shim binary path
+- `SIM_SERVER_BIN` – `mplane-server-app` binary (default `build/server-sim/mplane-server-app`)
+- `SIM_CLIENT_BIN` – `mplane_client` command (default `mplane_client/build/mpc_client`)
+- `SIM_SHIM_PID_FILE`, `SIM_SERVER_PID_FILE`, `SIM_CLIENT_PID_FILE` – PID file locations
 
 Build (example):
 - Build halmplane for x86 (Yocto-style vars shown for clarity):
@@ -33,5 +39,5 @@ Build (example):
 - Start shim: `./tools/sim/sim_start.sh`
 
 Notes:
-- The shim does not start `mplane-server-app` or `mpc_client` automatically yet; see Tests.md for orchestration guidance.
+- `sim_start.sh` launches `mplane-server-app` and the `mplane_client` gRPC listener automatically; override paths via variables above.
 - When SW events are emitted with `slot=<name>`, the server updates `/o-ran-swm:software-inventory/software-slot[name='<name>']` status/active/running accordingly.
