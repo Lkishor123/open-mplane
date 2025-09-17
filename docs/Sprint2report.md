@@ -67,7 +67,7 @@ cmake --build "$ROOT_DIR/mplane_server/utils/test_shim/build" -j
 * `libhalmplane/x86/src/MplaneUplaneConf.c`
 * `libhalmplane/x86/src/mock_hal_control.c`
 
-### Untracked Files (`.cpp` replacements)
+### Added Files (`.cpp` replacements)
 
 * `libhalmplane/x86/src/MplaneAlarms.cpp`
 * `libhalmplane/x86/src/MplaneEcpri.cpp`
@@ -75,7 +75,7 @@ cmake --build "$ROOT_DIR/mplane_server/utils/test_shim/build" -j
 * `libhalmplane/x86/src/MplaneSync.cpp`
 * `libhalmplane/x86/src/MplaneUplaneConf.cpp`
 * `libhalmplane/x86/src/mock_hal_control.cpp`
-* `.vscode/` (editor configuration)
+
 
 ---
 
