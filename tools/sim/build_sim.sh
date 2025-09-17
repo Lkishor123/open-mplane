@@ -11,7 +11,19 @@ cmake -S "$ROOT_DIR/libhalmplane" -B "$ROOT_DIR/build/hal-x86" \
 cmake --build "$ROOT_DIR/build/hal-x86" -j
 
 echo "[sim] Building server-test-shim"
-cmake -S "$ROOT_DIR/mplane_server/utils/test_shim" -B "$ROOT_DIR/mplane_server/utils/test_shim/build"
+
+HALMPLANE_LIB="$ROOT_DIR/build/hal-x86/libhalmplane.so"
+HALMPLANE_INCLUDE_DIR="$ROOT_DIR/libhalmplane/inc"
+HALMPLANE_X86_INCLUDE_DIR="$ROOT_DIR/libhalmplane/x86/inc"
+HALMPLANE_BUILD_INCLUDE_DIR="$ROOT_DIR/build/hal-x86"
+
+cmake -S "$ROOT_DIR/mplane_server/utils/test_shim" \
+      -B "$ROOT_DIR/mplane_server/utils/test_shim/build" \
+      -DHALMPLANE_LIB="$HALMPLANE_LIB" \
+      -DHALMPLANE_INCLUDE_DIR="$HALMPLANE_INCLUDE_DIR" \
+      -DHALMPLANE_X86_INCLUDE_DIR="$HALMPLANE_X86_INCLUDE_DIR" \
+      -DHALMPLANE_BUILD_INCLUDE_DIR="$HALMPLANE_BUILD_INCLUDE_DIR"
+
 cmake --build "$ROOT_DIR/mplane_server/utils/test_shim/build" -j
 
 echo "[sim] Building mplane_server with HAL_TEST"

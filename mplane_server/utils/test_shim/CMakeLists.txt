@@ -14,8 +14,15 @@ if(NOT HALMPLANE_INCLUDE_DIR)
   message(WARNING "HalMplane.h not found; set HALMPLANE_INCLUDE_DIR to libhalmplane/inc")
 endif()
 
+# Include both the main and x86-specific include directories
 include_directories(${HALMPLANE_INCLUDE_DIR})
+if(HALMPLANE_X86_INCLUDE_DIR)
+  include_directories(${HALMPLANE_X86_INCLUDE_DIR})
+endif()
+
+if(HALMPLANE_BUILD_INCLUDE_DIR)
+  include_directories(${HALMPLANE_BUILD_INCLUDE_DIR})
+endif()
 
 add_executable(server-test-shim ServerTestShim.cpp)
 target_link_libraries(server-test-shim ${HALMPLANE_LIB})
-

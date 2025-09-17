@@ -1,4 +1,4 @@
-// Minimal mock implementation to support x86 simulator control and HAL API
+// // Minimal mock implementation to support x86 simulator control and HAL API
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,7 +8,7 @@
 #include "mock_hal_control.h"
 
 #include "MplaneAlarms.h"
-#include "MplanePerformanceMgmt.h"
+// // #include "MplanePerformanceMgmt.h"
 #include "MplaneUplaneConf.h"
 #include "MplaneSync.h"
 
@@ -136,43 +136,43 @@ void mock_hal_set_sw_result_ext(
   emit_sw_event(phase, result);
 }
 
-int mock_hal_trigger_pm(
-    const char* object_name, const char* out_dir, const char* remote_dir) {
-  // Minimal stub: create a CSV file with a timestamped name
-  if (!object_name || !out_dir) return 1;
-  char path[512];
-  time_t now = time(NULL);
-  snprintf(path, sizeof(path), "%s/C%ld_%ld_%s.csv", out_dir, (long)now,
-           (long)now + 15, object_name);
-  FILE* f = fopen(path, "w");
-  if (!f) return 2;
-  fprintf(f, "timestamp,value\n");
-  for (int i = 0; i < 5; ++i) {
-    fprintf(f, "%ld,%d\n", (long)now + i, 42 + i);
-  }
-  fclose(f);
+// int mock_hal_trigger_pm(
+//     const char* object_name, const char* out_dir, const char* remote_dir) {
+//   // Minimal stub: create a CSV file with a timestamped name
+//   if (!object_name || !out_dir) return 1;
+//   char path[512];
+//   time_t now = time(NULL);
+//   snprintf(path, sizeof(path), "%s/C%ld_%ld_%s.csv", out_dir, (long)now,
+//            (long)now + 15, object_name);
+//   FILE* f = fopen(path, "w");
+//   if (!f) return 2;
+//   fprintf(f, "timestamp,value\n");
+//   for (int i = 0; i < 5; ++i) {
+//     fprintf(f, "%ld,%d\n", (long)now + i, 42 + i);
+//   }
+//   fclose(f);
 
-  if (remote_dir && remote_dir[0]) {
-    const char* fname = strrchr(path, '/');
-    fname = fname ? fname + 1 : path;
-    char rpath[512];
-    snprintf(rpath, sizeof(rpath), "%s/%s", remote_dir, fname);
-    FILE* src = fopen(path, "rb");
-    if (src) {
-      FILE* dst = fopen(rpath, "wb");
-      if (dst) {
-        char buf[4096];
-        size_t n;
-        while ((n = fread(buf, 1, sizeof(buf), src)) > 0) {
-          fwrite(buf, 1, n, dst);
-        }
-        fclose(dst);
-      }
-      fclose(src);
-    }
-  }
-  return 0;
-}
+//   if (remote_dir && remote_dir[0]) {
+//     const char* fname = strrchr(path, '/');
+//     fname = fname ? fname + 1 : path;
+//     char rpath[512];
+//     snprintf(rpath, sizeof(rpath), "%s/%s", remote_dir, fname);
+//     FILE* src = fopen(path, "rb");
+//     if (src) {
+//       FILE* dst = fopen(rpath, "wb");
+//       if (dst) {
+//         char buf[4096];
+//         size_t n;
+//         while ((n = fread(buf, 1, sizeof(buf), src)) > 0) {
+//           fwrite(buf, 1, n, dst);
+//         }
+//         fclose(dst);
+//       }
+//       fclose(src);
+//     }
+//   }
+//   return 0;
+// }
 
 int mock_hal_status(char* buf, size_t buflen) {
   if (!buf || buflen == 0) return 1;
@@ -184,7 +184,7 @@ int mock_hal_status(char* buf, size_t buflen) {
   return (n < 0 || (size_t)n >= buflen) ? 2 : 0;
 }
 
-// ===================== HAL API implementations =====================
+// // ===================== HAL API implementations =====================
 
 // Alarms
 int halmplane_registerOranAlarmCallback(halmplane_oran_alarm_cb_t cb) {
@@ -304,17 +304,17 @@ int halmplane_setUPlaneConfiguration(user_plane_configuration_t* cfg) {
   (void)cfg; return 0;
 }
 
-// Performance Mgmt minimal APIs
-static halmplane_oran_perf_meas_cb_t g_perf_cb = NULL;
-int halmplane_registerOranPerfMeasCallback(
-    halmplane_oran_perf_meas_cb_t callback) {
-  g_perf_cb = callback;
-  return 0;
-}
-const halmplane_oran_perf_meas_cb_t get_perf_meas_cb_ptr(void) { return g_perf_cb; }
+// // Performance Mgmt minimal APIs
+// static halmplane_oran_perf_meas_cb_t g_perf_cb = NULL;
+// int halmplane_registerOranPerfMeasCallback(
+//     halmplane_oran_perf_meas_cb_t callback) {
+//   g_perf_cb = callback;
+//   return 0;
+// }
+// const halmplane_oran_perf_meas_cb_t get_perf_meas_cb_ptr(void) { return g_perf_cb; }
 
-int halmplane_getRssi(uint8_t interface, double* rssiValue) {
-  if (!rssiValue) return 1;
-  *rssiValue = -50.0 - (double)(interface % 4);
-  return 0;
-}
+// int halmplane_getRssi(uint8_t interface, double* rssiValue) {
+//   if (!rssiValue) return 1;
+//   *rssiValue = -50.0 - (double)(interface % 4);
+//   return 0;
+// }

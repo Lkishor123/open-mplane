@@ -7,7 +7,7 @@
 
 #include "MplaneAlarms.h"
 
-int halmplane_registerOranAlarmCallback(halmplane_oran_alarm_cb_t callback) {
-    return 0;
-    // TODO
-}
+// int halmplane_registerOranAlarmCallback(halmplane_oran_alarm_cb_t cb) {
+//   g_alarm_cb = cb;
+//   return 0;
+// }

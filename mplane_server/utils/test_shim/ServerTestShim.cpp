@@ -15,6 +15,8 @@
 #include <string>
 
 #include "MplaneUplaneConf.h"
+#include "HalMplane.h"
+
 #include "mock_hal_control.h"
 
 static const char* kSockPath = "/tmp/haltest.sock";
@@ -95,14 +97,14 @@ static int handle_line(int cfd, const std::string& line) {
     return 0;
   }
 
-  if (cmd == "pm") {
-    const char* remote = kv.count("remote") ? kv["remote"].c_str() : nullptr;
-    int rc = mock_hal_trigger_pm(kv["object"].c_str(),
-                                 kv["out"].c_str(),
-                                 remote);
-    dprintf(cfd, rc == 0 ? "OK\n" : "ERR:pm\n");
-    return 0;
-  }
+  // if (cmd == "pm") {
+  //   const char* remote = kv.count("remote") ? kv["remote"].c_str() : nullptr;
+  //   int rc = mock_hal_trigger_pm(kv["object"].c_str(),
+  //                                kv["out"].c_str(),
+  //                                remote);
+  //   dprintf(cfd, rc == 0 ? "OK\n" : "ERR:pm\n");
+  //   return 0;
+  // }
 
   if (cmd == "uplane") {
     std::string dir = kv["dir"]; // "tx" or "rx"
@@ -123,8 +125,8 @@ static int handle_line(int cfd, const std::string& line) {
   return 0;
 }
 
-extern "C" int halmplane_init(void*);
-extern "C" int halmplane_exit();
+// extern "C" int halmplane_init(void*);
+// extern "C" int halmplane_exit();
 
 int main() {
   std::signal(SIGINT, on_sigint);

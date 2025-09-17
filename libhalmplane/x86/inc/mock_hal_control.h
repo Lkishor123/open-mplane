@@ -8,9 +8,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
 // Reset all mock state to defaults
 void mock_hal_reset(void);
@@ -54,6 +54,6 @@ int mock_hal_trigger_pm(const char* object_name,
 // Provide a simple JSON status snapshot for observability
 int mock_hal_status(char* buf, size_t buflen);
 
-#ifdef __cplusplus
-}
-#endif
+// #ifdef __cplusplus
+// }
+// #endif
