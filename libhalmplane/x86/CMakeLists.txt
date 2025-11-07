@@ -4,6 +4,8 @@ set(X86_SOURCES
   src/MplaneEcpri.cpp
   src/MplaneUplaneConf.cpp
   src/MplaneSync.cpp
+  src/MplaneProcessingElements.cpp
+  src/MplaneInterfaces.cpp
   # src/MplanePerformanceMgmt.cpp
   src/MplaneAlarms.cpp
   src/mock_hal_control.cpp

@@ -174,6 +174,9 @@ if [[ $INSTALL_NETOPEER2 == true ]]; then
 fi
 
 # Build gRPC
+echo "Applying patch to abseil-cpp..."
+cd "$MPLANE_CLIENT_DIR/deps" || exit 1  # Ensure we're in the 'deps' directory
+patch -p1 -f < "$MPLANE_CLIENT_DIR/test/docker/patches/967.patch" -d grpc/third_party/abseil-cpp
 mkdir -p grpc/cmake/build
 cd grpc/cmake/build
 cmake -D gRPC_INSTALL=ON \
@@ -205,6 +208,9 @@ make DESTDIR=$(pwd)/../../install install
 cd ../..
 
 # Build googletest
+echo "Applying patch to googletest..."
+cd "$MPLANE_CLIENT_DIR/deps" || exit 1  # Navigate to the 'deps' directory
+patch -p1 -f < "$MPLANE_CLIENT_DIR/test/docker/patches/pull_request_3024.patch" -d googletest
 mkdir -p googletest/build
 cd googletest/build
 cmake -D CMAKE_INSTALL_PREFIX:PATH='' ..
