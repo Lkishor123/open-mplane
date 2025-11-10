@@ -13,6 +13,11 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo -e "${GREEN}[Server] Starting M-Plane Server with isolated dependencies${NC}"
+echo -e "${YELLOW}[Server] Note: This script requires sudo access for:${NC}"
+echo -e "${YELLOW}         - Binding to privileged port 830 (NETCONF)${NC}"
+echo -e "${YELLOW}         - Thread creation with elevated privileges${NC}"
+echo -e "${YELLOW}         - Sysrepo operations${NC}"
+echo ""
 
 # Check if server is built
 if [[ ! -f "$ROOT_DIR/build/server-sim/mplane-server-app" ]]; then
@@ -42,8 +47,8 @@ if [[ -S "$SOCK" ]]; then
 fi
 
 # Clean up sysrepo shared memory
-# echo -e "${YELLOW}[Server] Cleaning sysrepo shared memory${NC}"
-# sudo rm -rf /dev/shm/sr_* /dev/shm/srsub_* 2>/dev/null || true
+echo -e "${YELLOW}[Server] Cleaning sysrepo shared memory${NC}"
+sudo rm -rf /dev/shm/sr_* /dev/shm/srsub_* 2>/dev/null || true
 
 # Create netopeer2 PID file with writable permissions
 echo -e "${YELLOW}[Server] Setting up netopeer2 PID file${NC}"
@@ -61,9 +66,9 @@ echo -e "${GREEN}[Server] Shim PID: $SHIM_PID${NC}"
 # Wait for shim to initialize
 sleep 2
 
-# Start the server
-echo -e "${GREEN}[Server] Starting mplane-server-app...${NC}"
-LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
+# Start the server with sudo for privileged operations
+echo -e "${GREEN}[Server] Starting mplane-server-app with elevated privileges...${NC}"
+sudo -E LD_LIBRARY_PATH="$LD_LIBRARY_PATH" \
 YANG_MODPATH="$YANG_MODPATH" \
 "$ROOT_DIR/build/server-sim/mplane-server-app" \
     --cfg-data-path "$ROOT_DIR/mplane_server/yang-manager-server/yang-config" \
