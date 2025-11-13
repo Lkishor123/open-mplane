@@ -42,14 +42,6 @@ sudo apt install -y \
     wget \
     curl
 
-# Install additional dependencies
-sudo apt install -y \
-    libprotobuf-dev \
-    protobuf-compiler \
-    libboost-all-dev \
-    libtool \
-    autoconf \
-    automake
 ```
 
 ---
