@@ -123,6 +123,36 @@ Dependencies built and installed to .../mplane_server/deps/install
 
 **Important:** The build creates a symlink from `lib64` to `lib` to handle platform differences in library installation paths.
 
+### Step 3: Apply Netopeer2 Patches (Required)
+
+After building dependencies, apply required patches to fix build errors and NACM bugs in netopeer2:
+
+```bash
+cd ~/mplane_dev/open-mplane/mplane_server/deps/netopeer2
+
+# Apply the netopeer2 fixes patch
+git apply ../../utils/netopeer2-fixes.patch
+```
+
+**What this patch fixes:**
+- **Build errors:** Multiple definition issues for `some_msg` and `np2_stderr_log` variables
+- **NACM bug:** Incorrect username retrieval in NETCONF NMDA get-data operation (issue #617)
+  - Changes `sr_session_get_user(session)` to `np_get_nc_sess_user(session)` in `src/netconf_nmda.c`
+
+**Verification:**
+```bash
+# Check if patches were applied successfully
+git diff HEAD | grep -E "(extern char some_msg|np_get_nc_sess_user)"
+```
+
+**Expected output:**
+```
++extern char some_msg[4096];
++    ncac_check_data_read_filter(&data_get, np_get_nc_sess_user(session));
+```
+
+**Note:** If you get "error: patch failed" or "already applied", the patches may already be applied. You can verify by checking the files manually or running the build - it should succeed if patches are present.
+
 ---
 
 ## Building Client Dependencies (Optional)
@@ -487,6 +517,10 @@ cd mplane_server/utils
 ./get_deps_server.sh --no-fwdproxy
 ./build_deps_server.sh
 
+# Apply netopeer2 patches (REQUIRED)
+cd ~/mplane_dev/open-mplane/mplane_server/deps/netopeer2
+git apply ../../utils/netopeer2-fixes.patch
+
 # (Optional) Rebuild client dependencies
 cd ~/mplane_dev/open-mplane/mplane_client/utils/
 ./get_deps.sh --no-fwdproxy --dir ../
@@ -519,14 +553,18 @@ cd ~/mplane_dev/open-mplane/mplane_server/utils
 ./get_deps_server.sh --no-fwdproxy
 ./build_deps_server.sh
 
-# Step 2 (Optional): Build client dependencies
+# Step 2: Apply netopeer2 patches (REQUIRED)
+cd ~/mplane_dev/open-mplane/mplane_server/deps/netopeer2
+git apply ../../utils/netopeer2-fixes.patch
+
+# Step 3 (Optional): Build client dependencies
 sudo apt install cmake build-essential libssl-dev zlib1g-dev libpcre3-dev
 cd ~/mplane_dev/open-mplane/mplane_client/utils/
 ./get_deps.sh --no-fwdproxy --dir ../
 ./build_deps.sh --no-netopeer2 --dir ../
 ./build_mpclient.sh --parallel 2
 
-# Step 3: Build the simulation
+# Step 4: Build the simulation
 cd ~/mplane_dev/open-mplane
 ./tools/sim/build_sim.sh
 ```
