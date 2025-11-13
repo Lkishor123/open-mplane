@@ -54,10 +54,10 @@
     <container-users>
       <list-user>
         <listEntry>
-          <leaf-name value="" access="rw" />
+          <leaf-name value="admin" access="rw" />
           <leaf-account-type value="PASSWORD" access="rw" />
-          <leaf-password value="" access="rw" />
-          <leaf-enabled value="false" access="rw" />
+          <leaf-password value="Admin123!@#" access="rw" />
+          <leaf-enabled value="true" access="rw" /> 
         </listEntry>
       </list-user>
     </container-users>
@@ -101,6 +101,7 @@
       <leaf-maximum-number-of-transport-flows value="1" />
     </container-processing-elements>
   </module-o-ran-processing-element>
+  <module-o-ran-fm />
   <halmplane-board-modular>
     <file value="/usr/lib/libhalmplane-mod-example.so.1.1.0" />
   </halmplane-board-modular>

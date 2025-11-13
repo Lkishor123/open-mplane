@@ -17,6 +17,7 @@
 //=============================================================================================================
 #include "YangParamUtils.h"
 #include <sstream>
+#include <limits>  // For std::numeric_limits
 
 using namespace Mplane;
 
