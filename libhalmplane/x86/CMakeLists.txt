@@ -8,8 +8,12 @@ set(X86_SOURCES
   src/MplaneInterfaces.cpp
   # src/MplanePerformanceMgmt.cpp
   src/MplaneAlarms.cpp
-  src/mock_hal_control.cpp
   src/HalMplane.cpp
+  # Refactored simulator components
+  src/mock_hal_control.cpp
+  src/sim_control/alarm_ipc.cpp
+  src/sim_control/carrier_state.cpp
+  src/sim_control/hal_api_impl.cpp
 )
 
 # Transform relative paths to absolute paths from x86 directory
