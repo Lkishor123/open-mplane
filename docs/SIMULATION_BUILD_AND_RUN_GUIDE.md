@@ -449,6 +449,71 @@ This script will:
 - Use `--force` flag to reinstall/reconfigure everything
 - The script is idempotent (safe to run multiple times with `--force`)
 
+### Add SSH User for Password Authentication
+
+**IMPORTANT:** The setup script configures NETCONF but leaves the SSH user list empty. You must add your user to enable password authentication:
+
+```bash
+cd ~/mplane_dev/open-mplane
+
+# Create SSH user configuration
+cat > /tmp/add_netconf_ssh_user.xml << 'EOF'
+<netconf-server xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-server">
+    <listen>
+        <endpoint>
+            <name>default-ssh</name>
+            <ssh>
+                <ssh-server-parameters>
+                    <client-authentication>
+                        <users>
+                            <user>
+                                <name>YOUR_USERNAME</name>
+                                <password>$0$$</password>
+                            </user>
+                        </users>
+                    </client-authentication>
+                </ssh-server-parameters>
+            </ssh>
+        </endpoint>
+    </listen>
+</netconf-server>
+EOF
+
+# Replace YOUR_USERNAME with your actual username
+sed -i "s/YOUR_USERNAME/$USER/g" /tmp/add_netconf_ssh_user.xml
+
+# Apply the configuration
+sudo bash -c "export LD_LIBRARY_PATH=$PWD/mplane_server/deps/install/lib && \
+$PWD/mplane_server/deps/install/bin/sysrepocfg --edit=/tmp/add_netconf_ssh_user.xml \
+-d startup -f xml -m ietf-netconf-server -v2"
+
+# Verify it was applied
+sudo bash -c "export LD_LIBRARY_PATH=$PWD/mplane_server/deps/install/lib && \
+$PWD/mplane_server/deps/install/bin/sysrepocfg -X -d startup -f xml -m ietf-netconf-server" \
+| grep -A 5 "<users>"
+```
+
+**Expected output:**
+```xml
+<users>
+  <user>
+    <name>fahim</name>
+    <password>$0$$</password>
+  </user>
+</users>
+```
+
+**What `$0$$` means:**
+- This special password hash tells netopeer2 to use **system authentication** (PAM/shadow)
+- Your regular Linux user password will be used for NETCONF authentication
+- More secure than storing passwords in the YANG datastore
+
+**Why this is needed:**
+- The `setup_mplane_server.sh` script configures NETCONF with password support but doesn't add any users
+- Without users configured, password authentication is rejected
+- On Ubuntu, the root account is locked by default (cannot authenticate with password)
+- Using your regular user account is more secure
+
 ---
 
 ## Running the Server
@@ -594,6 +659,33 @@ cd ~/mplane_dev/open-mplane
 ```bash
 # One-time setup: Install remaining YANG modules and configure NETCONF
 ./tools/setup_mplane_server.sh --setup-only --force
+
+# Add SSH user for password authentication (REQUIRED)
+cat > /tmp/add_netconf_ssh_user.xml << 'EOF'
+<netconf-server xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-server">
+    <listen>
+        <endpoint>
+            <name>default-ssh</name>
+            <ssh>
+                <ssh-server-parameters>
+                    <client-authentication>
+                        <users>
+                            <user>
+                                <name>YOUR_USERNAME</name>
+                                <password>$0$$</password>
+                            </user>
+                        </users>
+                    </client-authentication>
+                </ssh-server-parameters>
+            </ssh>
+        </endpoint>
+    </listen>
+</netconf-server>
+EOF
+sed -i "s/YOUR_USERNAME/$USER/g" /tmp/add_netconf_ssh_user.xml
+sudo bash -c "export LD_LIBRARY_PATH=$PWD/mplane_server/deps/install/lib && \
+$PWD/mplane_server/deps/install/bin/sysrepocfg --edit=/tmp/add_netconf_ssh_user.xml \
+-d startup -f xml -m ietf-netconf-server -v2"
 ```
 
 ### Run Commands
@@ -637,14 +729,20 @@ Once the simulator is running successfully:
 
 2. **Connect with NETCONF client:**
    ```bash
-   # Install netopeer2-cli if not available
-   sudo apt install netopeer2
+   # Set environment for netopeer2-cli
+   cd ~/mplane_dev/open-mplane
+   export LD_LIBRARY_PATH="$PWD/mplane_client/deps/install/lib:$LD_LIBRARY_PATH"
 
-   # Connect to server
-   netopeer2-cli
-   > connect --host localhost --port 830 --login root
+   # Connect to server using your username (not root!)
+   $PWD/mplane_client/deps/install/bin/netopeer2-cli
+   > connect --host localhost --port 830 --login YOUR_USERNAME
+   # Enter your Linux user password when prompted
    > get-config --source running
+   > disconnect
+   > quit
    ```
+
+   **Note:** Use your regular Linux username (e.g., `fahim`), not `root`. The root account is locked on Ubuntu by default.
 
 3. **Explore O-RAN APIs:**
    - Review YANG models in `/usr/share/mplane-server/modules/`
