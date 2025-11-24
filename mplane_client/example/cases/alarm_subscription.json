@@ -1,0 +1,16 @@
+{
+  "commands": [
+    {
+      "connect": {}
+    },
+    {
+      "netconfRpc": {
+        "serializedYang": "<create-subscription xmlns=\"urn:ietf:params:xml:ns:netconf:notification:1.0\"><stream>NETCONF</stream></create-subscription>",
+        "timeoutSec": 5
+      }
+    },
+    {
+      "streamNotifications": {}
+    }
+  ]
+}
