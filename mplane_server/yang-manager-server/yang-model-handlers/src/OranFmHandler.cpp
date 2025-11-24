@@ -36,7 +36,9 @@ bool OranFmHandler::initialise() {
 void OranFmHandler::alarmCallbackWrapper(const halmplane_oran_alarm_t* alarm, void* store)
 {
   (void)store;
-  if (g_oranFmHandler) g_oranFmHandler->handleAlarm(alarm);
+  if (g_oranFmHandler) {
+    g_oranFmHandler->handleAlarm(alarm);
+  }
 }
 
 void OranFmHandler::handleAlarm(const halmplane_oran_alarm_t* alarm)
@@ -45,11 +47,13 @@ void OranFmHandler::handleAlarm(const halmplane_oran_alarm_t* alarm)
   std::shared_ptr<YangParams> params(std::make_shared<YangParams>());
 
   std::string notifPath(path("alarm-notif"));
-  std::string alarmPath = notifPath + "/alarm";
 
-  params->addParam(std::to_string(alarm->fault_id), alarmPath + "/fault-id");
-  if (alarm->fault_source)
-    params->addParam(std::string(alarm->fault_source), alarmPath + "/fault-source");
+  // Note: alarm fields are directly under alarm-notif
+  params->addParam(std::to_string(alarm->fault_id), notifPath + "/fault-id");
+
+  // fault-source is mandatory
+  std::string faultSource = alarm->fault_source ? std::string(alarm->fault_source) : "UNKNOWN";
+  params->addParam(faultSource, notifPath + "/fault-source");
 
   const char* sev = "MAJOR";
   switch (alarm->fault_severity) {
@@ -58,13 +62,16 @@ void OranFmHandler::handleAlarm(const halmplane_oran_alarm_t* alarm)
     case ORAN_FAULT_SEVERITY_MINOR: sev = "MINOR"; break;
     case ORAN_FAULT_SEVERITY_WARNING: sev = "WARNING"; break;
   }
-  params->addParam(std::string(sev), alarmPath + "/fault-severity");
-  params->addParam(alarm->is_cleared ? "true" : "false", alarmPath + "/is-cleared");
+  params->addParam(std::string(sev), notifPath + "/fault-severity");
+  params->addParam(alarm->is_cleared ? "true" : "false", notifPath + "/is-cleared");
+
   if (alarm->fault_text)
-    params->addParam(std::string(alarm->fault_text), alarmPath + "/fault-text");
+    params->addParam(std::string(alarm->fault_text), notifPath + "/fault-text");
 
-  params->addParam(iso8601_now(), alarmPath + "/event-time");
+  params->addParam(iso8601_now(), notifPath + "/event-time");
 
+  // affected-objects is mandatory (min-elements 1) - use array index [1] not key predicate
+  params->addParam(faultSource, notifPath + "/affected-objects[1]/name");
   sendNotification(notifPath, params);
 }
 
