@@ -269,6 +269,9 @@ list(APPEND MPLANE_SERVER_SOURCES
   yang-manager-server/ssh/src/SftpMgr.cpp
   yang-manager-server/ssh/src/SftpSession.cpp
   yang-manager-server/ssh/src/SshSession.cpp
+  yang-manager-server/software/src/SimSoftwarePackage.cpp
+  yang-manager-server/software/src/SimSoftwareSlot.cpp
+  yang-manager-server/software/src/SimSoftwareSlotMgr.cpp
   yang-manager-server/yang-handlers/src/XpathUtils.cpp
   yang-manager-server/yang-handlers/src/YangHandler.cpp
   yang-manager-server/yang-handlers/src/YangCarrierMgr.cpp
@@ -349,6 +352,7 @@ include_directories(yang-manager-server/NetopeerMonitoringService/inc)
 include_directories(yang-manager-server/RadioDatastore/inc)
 include_directories(yang-manager-server/services/inc)
 include_directories(yang-manager-server/ssh/inc)
+include_directories(yang-manager-server/software/inc)
 include_directories(yang-manager-server/vyms/inc)
 include_directories(yang-manager-server/yang-handlers/inc)
 include_directories(yang-manager-server/yang-manager-service/inc)
@@ -414,6 +418,7 @@ if(HAL_TEST)
   target_sources(mplane-server-app PRIVATE
     yang-manager-server/yang-model-handlers/src/OranFmHandler.cpp
     yang-manager-server/yang-model-handlers/src/OranSwmHandler.cpp
+    yang-manager-server/yang-model-handlers/src/CallbackORanSoftwareMgr.cpp
   )
 endif()
 
