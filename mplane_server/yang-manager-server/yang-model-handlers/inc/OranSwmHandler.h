@@ -10,6 +10,8 @@
 
 namespace Mplane {
 
+class CallbackORanSoftwareMgr;  // Forward declaration
+
 class OranSwmHandler : public YangHandlerSysrepo {
  public:
   explicit OranSwmHandler(std::shared_ptr<IYangModuleMgr> moduleMgr);
@@ -23,6 +25,36 @@ class OranSwmHandler : public YangHandlerSysrepo {
   void handleSwEvent(const mock_sw_event_t* ev);
 #endif
   static const char* normalize_status(const char* res);
+
+  //=== RPC handler methods ===
+  bool rpcDownload(
+      std::shared_ptr<sysrepo::Session> session,
+      const std::string& rpcXpath,
+      std::shared_ptr<YangParams> callList,
+      std::shared_ptr<YangParams> retList);
+
+  bool rpcInstall(
+      std::shared_ptr<sysrepo::Session> session,
+      const std::string& rpcXpath,
+      std::shared_ptr<YangParams> callList,
+      std::shared_ptr<YangParams> retList);
+
+  bool rpcActivate(
+      std::shared_ptr<sysrepo::Session> session,
+      const std::string& rpcXpath,
+      std::shared_ptr<YangParams> callList,
+      std::shared_ptr<YangParams> retList);
+
+  // Helper methods
+  void statusOk(const std::string& rpc, std::shared_ptr<YangParams> retList);
+  void statusFail(const std::string& rpc, std::shared_ptr<YangParams> retList,
+                  const std::string& reason, const std::string& status = "FAILED");
+
+  //=== Callback for software-inventory operational data ===
+  std::shared_ptr<CallbackORanSoftwareMgr> mCallback;
+
+  //=== Software download directory ===
+  std::string mSoftwareDir;
 };
 
 } // namespace Mplane

@@ -102,6 +102,7 @@
     </container-processing-elements>
   </module-o-ran-processing-element>
   <module-o-ran-fm />
+  <module-o-ran-software-management />
   <halmplane-board-modular>
     <file value="/usr/lib/libhalmplane-mod-example.so.1.1.0" />
   </halmplane-board-modular>
