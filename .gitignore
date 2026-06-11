@@ -2,6 +2,7 @@
 
 # Build ephemera
 **/build
+build-*
 **/.settings
 fb-oru/buildTools/cmake/.build.mk
 *.tar.gz

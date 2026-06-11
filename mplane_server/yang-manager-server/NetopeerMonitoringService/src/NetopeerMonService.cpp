@@ -282,6 +282,11 @@ Mplane::NetopeerMonService::spawnNetopeerServer(void) {
   }
   std::string netopeerCmdFullStr =
       mNetopeerCommandStr + " -d -v " + netopeerDbgOptionStr;
+  const char* extraArgs = std::getenv("NETOPEER2_SERVER_ARGS");
+  if (extraArgs && extraArgs[0] != '\0') {
+    netopeerCmdFullStr += " ";
+    netopeerCmdFullStr += extraArgs;
+  }
 
   mNetopeerProcess = bp::child(netopeerCmdFullStr.c_str());
 

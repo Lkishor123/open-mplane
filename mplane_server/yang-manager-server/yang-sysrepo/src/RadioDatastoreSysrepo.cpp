@@ -109,6 +109,10 @@ RadioDatastoreSysrepo::activate(void) {
         sr_error_t::SR_ERR_INTERNAL, "activate() - no connection");
   } else {
     try {
+      if (isState(State_E::INITIALISED)) {
+        setState(State_E::CONFIGURING);
+      }
+
       // Reset connection to sysrepo datastore
       resetConnection();
 

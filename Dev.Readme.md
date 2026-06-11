@@ -11,6 +11,7 @@ cd /workspace/cloudlyRANbeta/open-mplane
 ./dev/scripts/bootstrap_ubuntu22.sh
 ./dev/scripts/build_all.sh
 ./dev/scripts/validate_build.sh
+./dev/scripts/mock_du_mplane_flow.sh
 ```
 
 The Yocto `meta-mplane` workflow remains available for target images and
@@ -20,6 +21,11 @@ The validated development environment is the parent repo's VirtualBox-backed
 Ubuntu 22.04 VM. Docker can support containerized experiments, but it is not
 the primary Open M-Plane dev path for this POC because the server workflow
 depends on sysrepo/netopeer2 runtime behavior and local shared-library wiring.
+
+The runtime smoke script validates the development path end to end:
+`mpclient-demo -> mpc_client -> mplane_server -> libhalmplane mock-RU log`. It
+uses NETCONF port `1830` and a temporary `/tmp` sysrepo bind mount for
+VirtualBox compatibility.
 
 Open M-Plane implements portions of the O-RAN Alliance Management Plane (M-Plane) used to manage Open Fronthaul radio units. This document summarizes the project layout and describes how to build and run the software.
 

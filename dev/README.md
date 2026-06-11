@@ -30,6 +30,7 @@ cd /workspace/cloudlyRANbeta/open-mplane
 ./dev/scripts/bootstrap_ubuntu22.sh
 ./dev/scripts/build_all.sh
 ./dev/scripts/validate_build.sh
+./dev/scripts/mock_du_mplane_flow.sh
 ```
 
 `bootstrap_ubuntu22.sh` installs the source-built NETCONF/gRPC dependency stack
@@ -52,6 +53,17 @@ On the validated VM, `build_all.sh` builds `mplane_client`, `libhalmplane`, and
 `mplane_server`, and `validate_build.sh` confirms the artifacts are present and
 executable. `validate_build.sh` may print gflags `flagfile` warnings during
 `--help` probes; those warnings are non-fatal in the current dev smoke check.
+
+`mock_du_mplane_flow.sh` is the runtime smoke test. It starts `mplane_server`,
+starts `mpc_client`, runs `mpclient-demo` as a mock DU, sends a NETCONF
+capabilities request, sends an `edit-config` for
+`ietf-interfaces/eth0/description`, and verifies the final request in the
+`libhalmplane` mock-RU log.
+
+The script uses NETCONF port `1830` and bind-mounts a temporary sysrepo
+repository from `/tmp` over the compiled repository path. This avoids
+privileged port binding and VirtualBox shared-folder FIFO/socket limitations
+while keeping the build artifacts in the mounted project workspace.
 
 VirtualBox shared-folder timestamp drift on macOS can also produce `Clock skew
 detected` warnings from `make`. Re-run `build_all.sh` if a build looks

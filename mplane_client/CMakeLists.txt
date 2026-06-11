@@ -48,7 +48,7 @@ set (
 
 set (
   MPC_LIBS
-  netconf2 yang ssh gflags gtest ${GRPCPP_LIBRARY} ${GRPC_LIBRARY}
+  netconf2 yang ssh gtest ${GRPCPP_LIBRARY} ${GRPC_LIBRARY}
   ${PROTOBUF_LIBRARY} ssl crypto pthread glog z
 )
 

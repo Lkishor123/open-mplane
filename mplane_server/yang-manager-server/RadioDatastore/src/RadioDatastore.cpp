@@ -142,22 +142,24 @@ RadioDatastore::setState(IRadioDataStore::State_E state) {
   bool validStateChange = true;
 
   if (state != mState) {
-    switch (mState) {
-      case State_E::UNINITIALISED:
-        if (state != State_E::INITIALISED)
-          validStateChange = false;
-        break;
-      case State_E::INITIALISED:
-        if (state != State_E::CONFIGURING)
-          validStateChange = false;
-        break;
-      case State_E::CONFIGURING:
-        if (state != State_E::ACTIVE)
-          validStateChange = false;
-        break;
-      case State_E::ACTIVE:
-      case State_E::SETUP_FAILURE:
-        break;
+    if (state != State_E::SETUP_FAILURE) {
+      switch (mState) {
+        case State_E::UNINITIALISED:
+          if (state != State_E::INITIALISED)
+            validStateChange = false;
+          break;
+        case State_E::INITIALISED:
+          if (state != State_E::CONFIGURING)
+            validStateChange = false;
+          break;
+        case State_E::CONFIGURING:
+          if (state != State_E::ACTIVE)
+            validStateChange = false;
+          break;
+        case State_E::ACTIVE:
+        case State_E::SETUP_FAILURE:
+          break;
+      }
     }
     if (!validStateChange)
       throw std::runtime_error("Invalid radio datastore state change");
