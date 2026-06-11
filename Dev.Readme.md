@@ -1,5 +1,21 @@
 # Open M-Plane Developer Guide
 
+## VM-first Developer Build
+
+For the CloudlyRANbeta POC, use the Ubuntu 22.04 Vagrant workflow from the
+parent repo and the scripts in `dev/`. This avoids the Yocto image path for
+normal iteration on `mplane_client`, `mplane_server`, and `libhalmplane`.
+
+```bash
+cd /workspace/cloudlyRANbeta/open-mplane
+./dev/scripts/bootstrap_ubuntu22.sh
+./dev/scripts/build_all.sh
+./dev/scripts/validate_build.sh
+```
+
+The Yocto `meta-mplane` workflow remains available for target images and
+hardware deployment.
+
 Open M-Plane implements portions of the O-RAN Alliance Management Plane (M-Plane) used to manage Open Fronthaul radio units. This document summarizes the project layout and describes how to build and run the software.
 
 ## Repository Overview

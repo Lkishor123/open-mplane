@@ -15,6 +15,9 @@ Open Fronthaul Interface specified by O-RAN Workgroup 4.
 * **HardwareDeployment.md** - Instructions for building images and running the server on supported boards.
 
 ## Client and Server Configuration Workflow
+* For VM development in the CloudlyRANbeta POC, use
+  [dev/README.md](dev/README.md). This path builds `mplane_client`,
+  `mplane_server`, and `libhalmplane` without building a Yocto image.
 * Follow the [meta-mplane](https://github.com/lf-connectivity/open-mplane/tree/main/meta-mplane)
   setup guide to build and run the mplane_server
 * Build the [mplane_client](https://github.com/lf-connectivity/open-mplane/tree/main/mplane_client)
