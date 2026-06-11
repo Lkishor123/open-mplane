@@ -23,9 +23,9 @@ if [[ "${1:-}" == "--apt-only" || "${1:-}" == "--with-apt" ]]; then
     autoconf automake bison build-essential ca-certificates ccache chrpath \
     cmake curl diffstat doxygen flex gdb git graphviz iproute2 \
     libboost-all-dev libcurl4-openssl-dev libfftw3-dev libgflags-dev \
-    libglog-dev libgtest-dev libpcre3-dev libssl-dev libtinyxml2-dev \
+    libgoogle-glog-dev libgtest-dev libpcre3-dev libssl-dev libtinyxml2-dev \
     libtool libxml2-dev net-tools ninja-build pkg-config protobuf-compiler \
-    protobuf-compiler-grpc python3 python3-pip python3-venv rsync sudo unzip \
+    protobuf-compiler-grpc python3 python3-pip python3-venv rsync sudo swig unzip \
     vim wget zlib1g-dev
   if [[ "${1:-}" == "--apt-only" ]]; then
     exit 0

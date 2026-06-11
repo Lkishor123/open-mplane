@@ -35,7 +35,7 @@ namespace Mplane {
  * \details
  *
  */
-class RpcCallback : public sysrepo::Callback {
+class RpcCallback {
 public:
  /**
   * RPC callback
@@ -65,7 +65,7 @@ public:
      sr_event_t event,
      uint32_t request_id,
      sysrepo::S_Vals_Holder output,
-     void* private_data) override;
+     void* private_data);
 
 private:
     std::string mXpath ;

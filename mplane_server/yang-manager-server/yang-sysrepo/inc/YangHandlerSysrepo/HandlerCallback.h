@@ -20,6 +20,7 @@
 #include <string>
 #include <memory>
 #include <cstdint>
+#include <set>
 
 #include <sysrepo-cpp/Connection.hpp>
 #include <sysrepo-cpp/Session.hpp>
@@ -36,7 +37,7 @@ class YangHandlerSysrepoUnlogged ;
  * \details
  *
  */
-class HandlerCallback : public sysrepo::Callback {
+class HandlerCallback {
 public:
  using GetPathsFunc = std::function<std::set<std::string>()>;
  using SetValFunc = std::function<void(std::shared_ptr<sysrepo::Val>)>;
@@ -53,13 +54,13 @@ public:
  /**
   * sysrepo module change callback
   */
- virtual int module_change(
+ int module_change(
      sysrepo::S_Session sess,
      const char* module_name,
      const char* xpath,
      sr_event_t event,
      uint32_t request_id,
-     void* private_data) override;
+     void* private_data);
 
 private:
  // Check for pseudo read-only

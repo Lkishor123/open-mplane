@@ -6,7 +6,7 @@
  */
 
 #include <map>
-#include "libtinyxml2/tinyxml2.h"
+#include <tinyxml2.h>
 #include "HalMplane.h"
 #include "MplaneInterfaces.h"
 #include "MplaneProcessingElements.h"

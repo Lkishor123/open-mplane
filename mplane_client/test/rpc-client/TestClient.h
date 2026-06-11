@@ -5,6 +5,7 @@
 #include "mpclient.grpc.pb.h"
 
 #include <future>
+#include <optional>
 
 /**
  * Implementation of a client; this is the layer that interacts with the

@@ -1,4 +1,5 @@
 #! /bin/bash
+set -euo pipefail
 
 # How many parallel threads to run when building mpclient; 1 thread by default
 PARALLEL=1

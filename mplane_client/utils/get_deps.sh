@@ -1,10 +1,12 @@
 #! /bin/bash
+set -euo pipefail
 
 # Enable the forward proxy unless explicitly told to disable
 export https_proxy=fwdproxy:8080
 
 # Do not download rpm packages unless told to do so
 DOWNLOAD_DNF_DEPS=false
+MPLANE_CLIENT_DIR=""
 
 # Display Help
 display_help()

@@ -100,8 +100,7 @@ public:
  virtual YangResult_E getItemsSubscribe(
      const std::string& moduleName,
      const std::string& path,
-     sysrepo::S_Callback callback,
-     void* privateData = nullptr,
+     sysrepo::OperGetItemsCb callback,
      uint16_t datastoreId = (uint16_t)RadDs_E::RADIO_DS_RUNNING);
 
  /*
@@ -109,10 +108,9 @@ public:
   */
  virtual YangResult_E itemsChangeSubscribe(
      const std::string& moduleName,
-     sysrepo::S_Callback callback,
+     sysrepo::ModuleChangeCb callback,
      const std::string& xpath = "",
-     void* privateData = nullptr,
-     sr_subscr_flag_t subscribeFlag = SR_SUBSCR_DEFAULT,
+     sr_subscr_options_t subscribeFlag = SR_SUBSCR_DEFAULT,
      uint16_t datastoreId = (uint16_t)RadDs_E::RADIO_DS_RUNNING);
 
  /**
@@ -120,7 +118,7 @@ public:
   */
  virtual YangResult_E rpcSubscribe(
      const std::string& path,
-     sysrepo::S_Callback callback,
+     sysrepo::RpcCb callback,
      uint16_t datastoreId = (uint16_t)RadDs_E::RADIO_DS_RUNNING);
 
  /*

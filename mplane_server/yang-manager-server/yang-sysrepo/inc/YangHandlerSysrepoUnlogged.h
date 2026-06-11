@@ -35,6 +35,7 @@
 #include "ISendNotification.h"
 #include "YangHandlerSysrepo/HandlerCallback.h"
 #include "YangHandlerSysrepo/RpcCallback.h"
+#include "SysrepoGetitemsCallback.h"
 
 namespace Mplane {
 
@@ -144,7 +145,7 @@ protected:
   * Subscribe to get items
   */
  virtual void getItemsSubscribe(
-     const std::string& xpath, std::shared_ptr<sysrepo::Callback> callback);
+     const std::string& xpath, std::shared_ptr<SysrepoGetitemsCallback> callback);
 
  /*
   * Create a string item

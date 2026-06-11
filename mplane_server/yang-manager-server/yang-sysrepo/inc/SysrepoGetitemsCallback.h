@@ -34,21 +34,21 @@ namespace Mplane {
  * \details
  *
  */
-class SysrepoGetitemsCallback : public sysrepo::Callback, public LeafContainer {
+class SysrepoGetitemsCallback : public LeafContainer {
 public:
  SysrepoGetitemsCallback(const std::string& parentPath);
  virtual ~SysrepoGetitemsCallback();
 
  virtual std::string path() const;
 
- virtual int oper_get_items(
+ int oper_get_items(
      sysrepo::S_Session session,
      const char* module_name,
      const char* path,
      const char* request_xpath,
      uint32_t request_id,
      libyang::S_Data_Node& parent,
-     void* private_data) override;
+     void* private_data);
 
 private:
  void processElements(

@@ -16,6 +16,11 @@ cd /workspace/cloudlyRANbeta/open-mplane
 The Yocto `meta-mplane` workflow remains available for target images and
 hardware deployment.
 
+The validated development environment is the parent repo's VirtualBox-backed
+Ubuntu 22.04 VM. Docker can support containerized experiments, but it is not
+the primary Open M-Plane dev path for this POC because the server workflow
+depends on sysrepo/netopeer2 runtime behavior and local shared-library wiring.
+
 Open M-Plane implements portions of the O-RAN Alliance Management Plane (M-Plane) used to manage Open Fronthaul radio units. This document summarizes the project layout and describes how to build and run the software.
 
 ## Repository Overview

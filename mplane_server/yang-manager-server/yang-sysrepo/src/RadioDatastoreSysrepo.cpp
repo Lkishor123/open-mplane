@@ -443,8 +443,7 @@ YangResult_E
 RadioDatastoreSysrepo::getItemsSubscribe(
     const std::string& moduleName,
     const std::string& path,
-    sysrepo::S_Callback callback,
-    void* privateData,
+    sysrepo::OperGetItemsCb callback,
     uint16_t datastoreId) {
   YangResult_E result = YangResult_E::OK;
 
@@ -459,7 +458,7 @@ RadioDatastoreSysrepo::getItemsSubscribe(
     sysrepo::S_Subscribe subscribe(
         new sysrepo::Subscribe(mSrSessions[datastoreId]));
     subscribe->oper_get_items_subscribe(
-        moduleName.c_str(), path.c_str(), callback, privateData);
+        moduleName.c_str(), callback, path.c_str());
     mSubscriptions.push_back(subscribe);
   } catch (const sysrepo::sysrepo_exception& exception) {
     result = exceptionHandler(exception, "getItemsSubscribe() - " + moduleName);
@@ -471,10 +470,9 @@ RadioDatastoreSysrepo::getItemsSubscribe(
 YangResult_E
 RadioDatastoreSysrepo::itemsChangeSubscribe(
     const std::string& moduleName,
-    sysrepo::S_Callback callback,
+    sysrepo::ModuleChangeCb callback,
     const std::string& xpath,
-    void* privateData,
-    sr_subscr_flag_t subscribeFlag,
+    sr_subscr_options_t subscribeFlag,
     uint16_t datastoreId) {
   YangResult_E result = YangResult_E::OK;
 
@@ -492,7 +490,7 @@ RadioDatastoreSysrepo::itemsChangeSubscribe(
     if (!xpath.empty())
       xp = xpath.c_str();
     subscribe->module_change_subscribe(
-        moduleName.c_str(), callback, xp, privateData, 0, subscribeFlag);
+        moduleName.c_str(), callback, xp, 0, subscribeFlag);
     mSubscriptions.push_back(subscribe);
   } catch (const sysrepo::sysrepo_exception& exception) {
     result =
@@ -505,7 +503,7 @@ RadioDatastoreSysrepo::itemsChangeSubscribe(
 YangResult_E
 RadioDatastoreSysrepo::rpcSubscribe(
     const std::string& path,
-    sysrepo::S_Callback callback,
+    sysrepo::RpcCb callback,
     uint16_t datastoreId) {
   YangResult_E result = YangResult_E::OK;
 

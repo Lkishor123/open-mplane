@@ -1,10 +1,12 @@
 #! /bin/bash
+set -euo pipefail
 
 # Build and install netopeer2 by default
 INSTALL_NETOPEER2=true
 
 # Do not install Centos 8 rpms by default
 INSTALL_DNF_DEPS=false
+MPLANE_CLIENT_DIR=""
 
 # Display Help
 display_help()
@@ -95,6 +97,9 @@ cd ../..
 mkdir -p libyang/build
 cd libyang/build
 cmake -D ENABLE_BUILD_TESTS=OFF \
+      -D GEN_LANGUAGE_BINDINGS=ON \
+      -D GEN_CPP_BINDINGS=ON \
+      -D GEN_PYTHON_BINDINGS=OFF \
       -D CMAKE_INSTALL_PREFIX:PATH='' \
       ..
 make -j $(nproc)
@@ -122,6 +127,12 @@ if [[ $INSTALL_NETOPEER2 == true ]]; then
     cd sysrepo/build
     cmake -D LIBYANG_INCLUDE_DIR=../../install/include \
         -D LIBYANG_LIBRARY=../../install/lib64/libyang.so \
+        -D LIBYANG_CPP_INCLUDE_DIR=../../install/include \
+        -D LIBYANG_CPP_LIBRARY=../../install/lib64/libyang-cpp.so \
+        -D GEN_LANGUAGE_BINDINGS=ON \
+        -D GEN_CPP_BINDINGS=ON \
+        -D GEN_PYTHON_BINDINGS=OFF \
+        -D BUILD_CPP_EXAMPLES=OFF \
         -D CMAKE_INSTALL_PREFIX:PATH='' \
         ..
     make -j $(nproc)
@@ -174,6 +185,11 @@ if [[ $INSTALL_NETOPEER2 == true ]]; then
 fi
 
 # Build gRPC
+ABSL_FAILURE_SIGNAL_HANDLER="grpc/third_party/abseil-cpp/absl/debugging/failure_signal_handler.cc"
+if [[ -f "${ABSL_FAILURE_SIGNAL_HANDLER}" ]]; then
+    sed -i 's/std::max(SIGSTKSZ, 65536)/std::max<size_t>(SIGSTKSZ, 65536)/' "${ABSL_FAILURE_SIGNAL_HANDLER}"
+fi
+
 mkdir -p grpc/cmake/build
 cd grpc/cmake/build
 cmake -D gRPC_INSTALL=ON \
@@ -189,25 +205,29 @@ make DESTDIR=$(pwd)/../../../install install
 cd ../../..
 
 # Build gflags
-mkdir -p gflags/build
-cd gflags/build
-cmake -D CMAKE_INSTALL_PREFIX:PATH='/usr/..' ..  # To avoid a CMake error
+mkdir -p gflags/cmake-build
+cd gflags/cmake-build
+cmake -D CMAKE_INSTALL_PREFIX:PATH='/usr/..' \
+      -D CMAKE_POSITION_INDEPENDENT_CODE=ON \
+      ..  # To avoid a CMake error
 make -j $(nproc)
 make DESTDIR=$(pwd)/../../install install
 cd ../..
 
 # Build glog
-mkdir -p glog/build
-cd glog/build
+mkdir -p glog/cmake-build
+cd glog/cmake-build
 cmake -D CMAKE_INSTALL_PREFIX:PATH='' ..
 make -j $(nproc)
 make DESTDIR=$(pwd)/../../install install
 cd ../..
 
 # Build googletest
-mkdir -p googletest/build
-cd googletest/build
-cmake -D CMAKE_INSTALL_PREFIX:PATH='' ..
+mkdir -p googletest/cmake-build
+cd googletest/cmake-build
+cmake -D CMAKE_INSTALL_PREFIX:PATH='' \
+      -D CMAKE_CXX_FLAGS="-Wno-error=maybe-uninitialized" \
+      ..
 make -j $(nproc)
 make DESTDIR=$(pwd)/../../install install
 cd ../..
@@ -215,5 +235,5 @@ cd ../..
 cd ..
 
 # Add wrapper to build
-mkdir build
+mkdir -p build
 cp deps/install/bin/wrapper.sh build

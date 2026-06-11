@@ -28,7 +28,7 @@ using namespace Mplane;
 
 //-------------------------------------------------------------------------------------------------------------
 SysrepoGetitemsCallback::SysrepoGetitemsCallback(const std::string& parentPath)
-    : sysrepo::Callback(), LeafContainer(), mParentPath(parentPath) {}
+    : LeafContainer(), mParentPath(parentPath) {}
 
 //-------------------------------------------------------------------------------------------------------------
 SysrepoGetitemsCallback::~SysrepoGetitemsCallback() {}

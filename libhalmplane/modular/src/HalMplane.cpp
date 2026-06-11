@@ -6,7 +6,7 @@
  */
 
 #include <iostream>
-#include "libtinyxml2/tinyxml2.h"
+#include <tinyxml2.h>
 #include "HalMplane.h"
 
 #include "ModuleLoader.h"

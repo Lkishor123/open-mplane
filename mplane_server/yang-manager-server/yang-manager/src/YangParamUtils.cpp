@@ -16,6 +16,7 @@
 // INCLUDE
 //=============================================================================================================
 #include "YangParamUtils.h"
+#include <limits>
 #include <sstream>
 
 using namespace Mplane;

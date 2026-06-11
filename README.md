@@ -17,7 +17,9 @@ Open Fronthaul Interface specified by O-RAN Workgroup 4.
 ## Client and Server Configuration Workflow
 * For VM development in the CloudlyRANbeta POC, use
   [dev/README.md](dev/README.md). This path builds `mplane_client`,
-  `mplane_server`, and `libhalmplane` without building a Yocto image.
+  `mplane_server`, and `libhalmplane` without building a Yocto image. The
+  validated environment is the parent repo's VirtualBox-backed Ubuntu 22.04
+  Vagrant VM.
 * Follow the [meta-mplane](https://github.com/lf-connectivity/open-mplane/tree/main/meta-mplane)
   setup guide to build and run the mplane_server
 * Build the [mplane_client](https://github.com/lf-connectivity/open-mplane/tree/main/mplane_client)

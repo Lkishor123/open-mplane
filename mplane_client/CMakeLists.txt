@@ -2,21 +2,23 @@ cmake_minimum_required (VERSION 3.16)
 
 set (CMAKE_BUILD_TYPE Release)
 set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project (MPLANE_CLIENT CXX)
 
 set (MPC_CLIENT mpc_client)
 set (MPC_TESTER mpc_tester)
 set (Target_mpclient_demo mpclient-demo)
+set (MPC_DEPS_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/deps/install)
 
-find_program (PROTOC protoc PATHS deps/install/bin)
-find_program (GRPC_CPP_PLUGIN grpc_cpp_plugin PATHS deps/install/bin)
+find_program (PROTOC protoc PATHS ${MPC_DEPS_PREFIX}/bin NO_DEFAULT_PATH REQUIRED)
+find_program (GRPC_CPP_PLUGIN grpc_cpp_plugin PATHS ${MPC_DEPS_PREFIX}/bin NO_DEFAULT_PATH REQUIRED)
 
-link_directories (deps/install/lib64 deps/install/lib)
+link_directories (${MPC_DEPS_PREFIX}/lib64 ${MPC_DEPS_PREFIX}/lib)
 
-find_library (PROTOBUF protobuf PATHS deps/install/lib64)
-find_library (GRPC grpc PATHS deps/install/lib)
-find_library (GRPC++ grpc++ PATHS deps/install/lib)
+find_library (PROTOBUF_LIBRARY protobuf PATHS ${MPC_DEPS_PREFIX}/lib64 ${MPC_DEPS_PREFIX}/lib NO_DEFAULT_PATH REQUIRED)
+find_library (GRPC_LIBRARY grpc PATHS ${MPC_DEPS_PREFIX}/lib64 ${MPC_DEPS_PREFIX}/lib NO_DEFAULT_PATH REQUIRED)
+find_library (GRPCPP_LIBRARY grpc++ PATHS ${MPC_DEPS_PREFIX}/lib64 ${MPC_DEPS_PREFIX}/lib NO_DEFAULT_PATH REQUIRED)
 
 set (OUTPUT_DIR ${CMAKE_BINARY_DIR}/proto-gen)
 file (MAKE_DIRECTORY ${OUTPUT_DIR})
@@ -29,6 +31,7 @@ add_custom_command (
     ${OUTPUT_DIR}/src/if/mpclient.grpc.pb.h
   COMMAND
     ${PROTOC}
+    --experimental_allow_proto3_optional
     --cpp_out=${OUTPUT_DIR}
     --proto_path=${PROJECT_SOURCE_DIR}
     --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN}
@@ -36,7 +39,7 @@ add_custom_command (
     ${PROJECT_SOURCE_DIR}/src/if/mpclient.proto
 )
 
-include_directories (deps/install/include)
+include_directories (${MPC_DEPS_PREFIX}/include)
 include_directories (${OUTPUT_DIR}/src/if/ ${OUTPUT_DIR})
 
 set (
@@ -45,8 +48,8 @@ set (
 
 set (
   MPC_LIBS
-  netconf2 yang ssh gflags gtest ${GRPC++} ${GRPC} ${PROTOBUF} ssl crypto
-  pthread glog z
+  netconf2 yang ssh gflags gtest ${GRPCPP_LIBRARY} ${GRPC_LIBRARY}
+  ${PROTOBUF_LIBRARY} ssl crypto pthread glog z
 )
 
 file (GLOB MPC_CLIENT_SRC src/client/*.cpp)

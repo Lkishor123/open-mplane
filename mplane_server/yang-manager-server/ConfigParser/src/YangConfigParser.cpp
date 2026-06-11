@@ -45,7 +45,7 @@ YangConfigParser::load(void) {
 
   // Parse the final expanded file
   tinyxml2::XMLDocument doc;
-  if (doc.LoadFile(filePath.c_str()) != tinyxml2::XML_NO_ERROR) {
+  if (doc.LoadFile(filePath.c_str()) != tinyxml2::XML_SUCCESS) {
     eventError("Could not parse file %s", filePath.c_str());
     return ReturnType::RT_NOT_FOUND;
   }

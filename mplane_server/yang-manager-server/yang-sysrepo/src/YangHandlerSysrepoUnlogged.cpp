@@ -146,11 +146,19 @@ YangHandlerSysrepoUnlogged::changeSubscribe(const std::string& xpath) {
   std::shared_ptr<RadioDatastoreSysrepo> ds(
       std::dynamic_pointer_cast<RadioDatastoreSysrepo>(mgr->dataStore()));
 
+  std::shared_ptr<HandlerCallback> callback(mHandlerCallback);
   ds->itemsChangeSubscribe(
-      name(),
-      std::dynamic_pointer_cast<sysrepo::Callback>(mHandlerCallback),
-      xpath,
-      this);
+     name(),
+      [callback](
+          sysrepo::S_Session sess,
+          const char* moduleName,
+          const char* callbackXpath,
+          sr_event_t event,
+          uint32_t requestId) {
+        return callback->module_change(
+            sess, moduleName, callbackXpath, event, requestId, nullptr);
+      },
+      xpath);
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -178,13 +186,31 @@ YangHandlerSysrepoUnlogged::removeReadOnly(const std::string& xpath) {
 //-------------------------------------------------------------------------------------------------------------
 void
 YangHandlerSysrepoUnlogged::getItemsSubscribe(
-    const std::string& xpath, std::shared_ptr<sysrepo::Callback> callback) {
+    const std::string& xpath, std::shared_ptr<SysrepoGetitemsCallback> callback) {
   std::shared_ptr<YangMgrServer> mgr(
       std::dynamic_pointer_cast<YangMgrServer>(moduleMgr()));
   std::shared_ptr<RadioDatastoreSysrepo> ds(
       std::dynamic_pointer_cast<RadioDatastoreSysrepo>(mgr->dataStore()));
 
-  ds->getItemsSubscribe(name(), xpath, callback, this);
+  ds->getItemsSubscribe(
+      name(),
+      xpath,
+      [callback](
+          sysrepo::S_Session sess,
+          const char* moduleName,
+          const char* callbackPath,
+          const char* requestXpath,
+          uint32_t requestId,
+          libyang::S_Data_Node& parent) {
+        return callback->oper_get_items(
+            sess,
+            moduleName,
+            callbackPath,
+            requestXpath,
+            requestId,
+            parent,
+            nullptr);
+      });
 }
 
 //-------------------------------------------------------------------------------------------------------------
@@ -255,7 +281,18 @@ YangHandlerSysrepoUnlogged::registerRpc(
       std::dynamic_pointer_cast<YangMgrServer>(moduleMgr()));
   std::shared_ptr<RadioDatastoreSysrepo> ds(
       std::dynamic_pointer_cast<RadioDatastoreSysrepo>(mgr->dataStore()));
-  ds->rpcSubscribe(xpath, callback);
+  ds->rpcSubscribe(
+      xpath,
+      [callback](
+          sysrepo::S_Session session,
+          const char* opPath,
+          const sysrepo::S_Vals input,
+          sr_event_t event,
+          uint32_t requestId,
+          sysrepo::S_Vals_Holder output) {
+        return callback->rpc(
+            session, opPath, input, event, requestId, output, nullptr);
+      });
 
   // Add callback to list
   mRpcCallbacks.push_back(callback);

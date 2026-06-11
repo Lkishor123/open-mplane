@@ -15,6 +15,12 @@ mplane_client -> mplane_server -> libhalmplane modular HAL -> mock/log behavior
 Use Ubuntu 22.04 LTS. The root CloudlyRANbeta repo provides a Vagrant VM for
 this exact environment.
 
+The root VM uses `bento/ubuntu-22.04` with an architecture-aware VirtualBox box
+selection so both Apple Silicon and x86 hosts can provision an Ubuntu 22.04
+guest. Docker is useful for containerized support work, but the validated
+Open M-Plane development path is the VirtualBox VM because the server stack
+uses sysrepo, netopeer2, and host-style shared libraries.
+
 ## Workflow
 
 From inside the Vagrant VM:
@@ -39,6 +45,17 @@ artifacts into system paths.
 - `build/dev/install/sbin/mplane-server-app`
 - `build/dev/install/share/mplane-server/YangConfig.xml`
 - `build/dev/install/share/mplane-server/modules/*.yang`
+
+## Validation Notes
+
+On the validated VM, `build_all.sh` builds `mplane_client`, `libhalmplane`, and
+`mplane_server`, and `validate_build.sh` confirms the artifacts are present and
+executable. `validate_build.sh` may print gflags `flagfile` warnings during
+`--help` probes; those warnings are non-fatal in the current dev smoke check.
+
+VirtualBox shared-folder timestamp drift on macOS can also produce `Clock skew
+detected` warnings from `make`. Re-run `build_all.sh` if a build looks
+incomplete.
 
 ## Environment
 

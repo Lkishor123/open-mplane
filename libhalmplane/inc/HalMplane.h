@@ -7,7 +7,7 @@
 
 #ifndef __HAL_MPLANE_H__
 #define __HAL_MPLANE_H__
-#include "libtinyxml2/tinyxml2.h"
+#include <tinyxml2.h>
 
 /**
  * @brief HAL init function, to be called before YANG handlers initialization.

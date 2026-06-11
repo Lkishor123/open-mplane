@@ -72,7 +72,7 @@ YangServices::YangServices()
 
   std::string filePath = cfgData->getPath();
   tinyxml2::XMLDocument doc;
-  if (doc.LoadFile(filePath.c_str()) == tinyxml2::XML_NO_ERROR)
+  if (doc.LoadFile(filePath.c_str()) == tinyxml2::XML_SUCCESS)
     {
       halmplane_init(&doc);
     }
